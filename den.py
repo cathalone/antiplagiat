@@ -18,8 +18,3 @@ class text_comparer:
         normalized2 = self.text2[ind2].lower()
         matcher = difflib.SequenceMatcher(None, normalized1, normalized2)
         return matcher.ratio()
-
-if __name__ == "__main__":
-    comparer = text_comparer("file1.py", "file2.py")
-    print(comparer.similarity())
-    print(comparer.line_by_line_similitarity(2, 3))
