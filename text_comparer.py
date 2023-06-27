@@ -14,7 +14,12 @@ class text_comparer:
       return matcher.ratio()
 
     def line_by_line_similitarity(self, ind1, ind2):
-        normalized1 = self.text1[ind1].lower()
-        normalized2 = self.text2[ind2].lower()
+        lines1 = self.text1.split("\n")
+        lines2 = self.text2.split("\n")
+        normalized1 = lines1[ind1].lower()
+        normalized2 = lines2[ind2].lower()
         matcher = difflib.SequenceMatcher(None, normalized1, normalized2)
         return matcher.ratio()
+
+
+
