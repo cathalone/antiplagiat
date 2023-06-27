@@ -9,9 +9,9 @@ def text_to_image(text, n):
     img = Image.open('pic/pic' + str(n) + '.jpg')
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
     idraw = ImageDraw.Draw(img)
-    idraw.text((8, 8), text, font=font, fill=(0,255,0))
+    idraw.text((8, 8), text, font=font, fill=(0, 255, 0))
     img.save('pic/pic' + str(n) + '.jpg')
-    
+
 
 def similar_strings(path1, path2, n):
     txcp = tc.TextComparer(path1, path2)
@@ -24,7 +24,8 @@ def similar_strings(path1, path2, n):
             if l1[i] != '' and l2[j] != '':
                 misses.append((i, l1[i], j, l2[j], txcp.line_by_line_similitarity(i, j)))
     misses.sort(key=lambda obj: obj[4])
-    return misses[-1:-n-1:-1]
+    return misses[-1:-n - 1:-1]
+
 
 def pics_gen(path1, path2):
     misses = similar_strings(path1, path2, 30)
