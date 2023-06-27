@@ -30,7 +30,7 @@ def handle_file1(message):
             new_file.write(downloaded_file1)
         bot.reply_to(message, f'первый файл {file1_name} успешно загружен на компьютер. Скидывай второй, жээс')
         file_counter += 1
-    else:
+    elif file_counter == 1:
         """Обработчик приема файлов."""
         file2 = message.document
         file2_name = file2.file_name
@@ -42,5 +42,8 @@ def handle_file1(message):
         with open(save_path2, 'wb') as new_file:
             new_file.write(downloaded_file2)
         bot.reply_to(message, f'Ураа! Файл {file2_name} успешно загружен на компьютер. Нихуя больше не скидывай')
+        file_counter += 1
+    else:
+        bot.send_message(message.from_user.id, "пока, лох")
 
 bot.polling()
