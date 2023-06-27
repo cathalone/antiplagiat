@@ -3,13 +3,35 @@ import text_comparer as tc
 import difflib
 
 
-def text_to_image(text, n):
+def code_to_image(lines, line_number, percentage, n):
     img = Image.new('RGB', (1080, 720), 'black')
     img.save('pic/pic' + str(n) + '.jpg')
     img = Image.open('pic/pic' + str(n) + '.jpg')
-    font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
+    for i in range(len(lines)):
+        words_w_spaces = lines[i].split(" ")
+        words = []
+        for word in words_w_spaces:
+            if word != "":
+                words.append(word)
+        line = words[0]
+        for j in range(len(words)-1):
+            line = line + " " + words[j+1]
+
+        font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
+        idraw = ImageDraw.Draw(img)
+        idraw.text((60, 35+i*22), line, font=font, fill=(0, 255, 0))
+
+        font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
+        idraw = ImageDraw.Draw(img)
+        idraw.text((10, 38 + i * 22), "line " + str(line_number[i]), font=font, fill=(0, 255, 0))
+        font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
+        idraw = ImageDraw.Draw(img)
+        idraw.text((1050, 38 + i * 22), str(round(percentage[i]*100)) + " %", font=font, fill=(0, 255, 0))
+
+    font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
     idraw = ImageDraw.Draw(img)
-    idraw.text((8, 8), text, font=font, fill=(0, 255, 0))
+    idraw.text((5, 5), "FILE " + str(n), font=font, fill=(0, 255, 0))
+
     img.save('pic/pic' + str(n) + '.jpg')
 
 
@@ -29,13 +51,19 @@ def similar_strings(path1, path2, n):
 
 def pics_gen(path1, path2):
     misses = similar_strings(path1, path2, 30)
-    im1txt = ''
-    im2txt = ''
+    lines1 = []
+    lines2 = []
+    line_numbers1 = []
+    line_numbers2 = []
+    percentage = []
     for line in misses:
-        im1txt = im1txt + 'line' + str(line[0]) + ':  ' + line[1] + '\n'
-        im2txt = im2txt + 'line' + str(line[2]) + ':  ' + line[3] + '\n'
-    text_to_image(im1txt, 1)
-    text_to_image(im2txt, 2)
+        lines1.append(line[1])
+        lines2.append(line[3])
+        line_numbers1.append(line[0])
+        line_numbers2.append(line[2])
+        percentage.append(line[4])
+    code_to_image(lines1, line_numbers1, percentage, 1)
+    code_to_image(lines2, line_numbers2, percentage, 2)
 
 
 pics_gen('application.py', 'text_comparer.py')
