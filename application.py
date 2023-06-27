@@ -1,4 +1,5 @@
 from PIL import Image, ImageFont, ImageDraw
+import text_comparer as tc
 
 
 def text_to_image(text, n):
