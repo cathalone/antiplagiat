@@ -1,6 +1,5 @@
 from PIL import Image, ImageFont, ImageDraw
 import text_comparer as tc
-import difflib
 
 
 def code_to_image(lines, line_number, percentage, n):
@@ -62,8 +61,11 @@ def pics_gen(path1, path2):
         line_numbers1.append(line[0])
         line_numbers2.append(line[2])
         percentage.append(line[4])
+    txcp = tc.TextComparer(path1, path2)
+    sim = txcp.similarity()
     code_to_image(lines1, line_numbers1, percentage, 1)
     code_to_image(lines2, line_numbers2, percentage, 2)
+    return sim
 
 
 pics_gen('application.py', 'text_comparer.py')
