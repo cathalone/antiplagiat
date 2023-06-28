@@ -1,6 +1,5 @@
 from PIL import Image, ImageFont, ImageDraw
 import text_comparer as tc
-import difflib
 
 
 def code_to_image(lines, line_number, percentage, n):
@@ -21,6 +20,10 @@ def code_to_image(lines, line_number, percentage, n):
         idraw = ImageDraw.Draw(img)
         idraw.text((60, 35+i*22), line, font=font, fill=(0, 255, 0))
 
+        font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
+        idraw = ImageDraw.Draw(img)
+        idraw.text((0, 18 + i * 22), "_"*150, font=font, fill=(0, 255, 0))
+
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
         idraw.text((10, 38 + i * 22), "line " + str(line_number[i]), font=font, fill=(0, 255, 0))
@@ -28,6 +31,9 @@ def code_to_image(lines, line_number, percentage, n):
         idraw = ImageDraw.Draw(img)
         idraw.text((1050, 38 + i * 22), str(round(percentage[i]*100)) + " %", font=font, fill=(0, 255, 0))
 
+    font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
+    idraw = ImageDraw.Draw(img)
+    idraw.text((0, 18 + 30 * 22), "_" * 150, font=font, fill=(0, 255, 0))
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
     idraw = ImageDraw.Draw(img)
     idraw.text((5, 5), "FILE " + str(n), font=font, fill=(0, 255, 0))
@@ -62,8 +68,11 @@ def pics_gen(path1, path2):
         line_numbers1.append(line[0])
         line_numbers2.append(line[2])
         percentage.append(line[4])
+    txcp = tc.TextComparer(path1, path2)
+    sim = txcp.similarity()
     code_to_image(lines1, line_numbers1, percentage, 1)
     code_to_image(lines2, line_numbers2, percentage, 2)
+    return sim
 
 
 pics_gen('application.py', 'text_comparer.py')
