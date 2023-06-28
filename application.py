@@ -26,7 +26,7 @@ def code_to_image(lines, line_number, percentage, n):
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
-        idraw.text((10, 38 + i * 22), "line " + str(line_number[i]), font=font, fill=(0, 255, 0))
+        idraw.text((10, 38 + i * 22), "line " + str(line_number[i]+1), font=font, fill=(0, 255, 0))
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
         idraw.text((1050, 38 + i * 22), str(round(percentage[i]*100)) + " %", font=font, fill=(0, 255, 0))
@@ -75,4 +75,4 @@ def pics_gen(path1, path2):
     return sim
 
 
-pics_gen('application.py', 'text_comparer.py')
+pics_gen('MongoDB.py', 'text_comparer.py')
