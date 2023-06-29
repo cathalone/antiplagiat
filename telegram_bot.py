@@ -1,37 +1,46 @@
 import os
 import telebot
+from pathlib import Path
 
-# Замените 'YOUR_BOT_TOKEN' на токен вашего бота
 BOT_TOKEN = '6082801990:AAH6z9B6t8HSiSjA8KSR3FnjdgRDKY4h7Qo'
-# Укажите путь к папке, куда будут сохраняться загруженные файлы
-SAVE_DIR = 'C:/Users/di272/PycharmProjects/antiplagiat/files/photos'
-
 bot = telebot.TeleBot(BOT_TOKEN)
-file_counter = 0
+
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    """Обработчик команды /start."""
-    bot.reply_to(message, 'Привет! Пришли мне первый файл, и я загружу его на компьютер лээ.')
+    #узнаем тег пользователя
+    user_name = message.from_user.username
+
+    #если не существует папки с таким же именем, как и тег пользователя, то создаем ее
+    if not os.path.exists(f"C:/Users/di272/PycharmProjects/antiplagiat/files/{user_name}"):
+        os.mkdir(f"C:/Users/di272/PycharmProjects/antiplagiat/files/{user_name}")
+
+    global SAVE_DIR
+    SAVE_DIR = f"C:/Users/di272/PycharmProjects/antiplagiat/files/{user_name}"
+
+
+    bot.reply_to(message, f'Привет! Пришли мне первый файл, и я загружу его на компьютер в папку {SAVE_DIR} лээ.')
 
 @bot.message_handler(content_types=['document'])
 def handle_file1(message):
-    global file_counter
-    if file_counter == 0:
-        """Обработчик приема файлов."""
+
+    #когда мы получаем первый файл, то мы сразу отправляем его в текущий лист ожидания (до того момента, пока не получим пару к этому файлу)
+    #example: temp list = [file1,...]
+    if sum(1 for x in Path(SAVE_DIR).iterdir()) % 2 == 0:
         file1 = message.document
         file1_name = file1.file_name
 
         save_path1 = os.path.join(SAVE_DIR, file1_name)
+
         file1_info = bot.get_file(file1.file_id)
         downloaded_file1 = bot.download_file(file1_info.file_path)
 
         with open(save_path1, 'wb') as new_file:
             new_file.write(downloaded_file1)
         bot.reply_to(message, f'первый файл {file1_name} успешно загружен на компьютер. Скидывай второй, жээс')
-        file_counter += 1
-    elif file_counter == 1:
-        """Обработчик приема файлов."""
+
+    #на этом этапе у нас есть 2 файла: первый файл и файл, с которым мы хотим сравнить наш первый файл
+    elif sum(1 for x in Path(SAVE_DIR).iterdir()) % 2 == 1:
         file2 = message.document
         file2_name = file2.file_name
 
@@ -42,8 +51,5 @@ def handle_file1(message):
         with open(save_path2, 'wb') as new_file:
             new_file.write(downloaded_file2)
         bot.reply_to(message, f'Ураа! Файл {file2_name} успешно загружен на компьютер. Нихуя больше не скидывай')
-        file_counter += 1
-    else:
-        bot.send_message(message.from_user.id, "пока, лох")
 
 bot.polling()
