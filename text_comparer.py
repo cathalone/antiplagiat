@@ -3,6 +3,7 @@ import difflib
 
 class TextComparer:
 
+
     def __init__(self, path1, path2):
         file1 = open(path1)
         file2 = open(path2)
