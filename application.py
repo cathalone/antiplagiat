@@ -1,5 +1,6 @@
 from PIL import Image, ImageFont, ImageDraw
 import text_comparer as tc
+import text_formatter as tf
 
 
 def code_to_image(lines, line_number, percentage, n):
@@ -7,18 +8,13 @@ def code_to_image(lines, line_number, percentage, n):
     img.save('pic/pic' + str(n) + '.jpg')
     img = Image.open('pic/pic' + str(n) + '.jpg')
     for i in range(len(lines)):
-        words_w_spaces = lines[i].split(" ")
-        words = []
-        for word in words_w_spaces:
-            if word != "":
-                words.append(word)
-        line = words[0]
-        for j in range(len(words)-1):
-            line = line + " " + words[j+1]
+        line = tf.tabs_removing_for_line(lines[i])
+        # line = tf.line_wrap(line, 30)
+        # print(line)
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
         idraw = ImageDraw.Draw(img)
-        idraw.text((60, 35+i*22), line, font=font, fill=(0, 255, 0))
+        idraw.text((60, 35 + i * 22), line, font=font, fill=(0, 255, 0))
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
         idraw = ImageDraw.Draw(img)
@@ -27,6 +23,7 @@ def code_to_image(lines, line_number, percentage, n):
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
         idraw.text((10, 38 + i * 22), "line " + str(line_number[i]+1), font=font, fill=(0, 255, 0))
+
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
         idraw.text((1050, 38 + i * 22), str(round(percentage[i]*100)) + " %", font=font, fill=(0, 255, 0))
