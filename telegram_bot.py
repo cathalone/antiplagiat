@@ -3,7 +3,6 @@ import telebot
 from pathlib import Path
 import application as ap
 
-
 BOT_TOKEN = '6082801990:AAH6z9B6t8HSiSjA8KSR3FnjdgRDKY4h7Qo'
 bot = telebot.TeleBot(BOT_TOKEN)
 
@@ -12,17 +11,18 @@ bot = telebot.TeleBot(BOT_TOKEN)
 def start(message):
     user_name = message.from_user.username
 
-    if not os.path.exists(f"C:/Users/di272/PycharmProjects/antiplagiat/files/{user_name}"):
-        os.mkdir(f"C:/Users/di272/PycharmProjects/antiplagiat/files/{user_name}")
-
+    if not os.path.exists(f"files/{user_name}"):
+        os.mkdir(f"files/{user_name}")
 
     global SAVE_DIR
-    SAVE_DIR = f"C:/Users/di272/PycharmProjects/antiplagiat/files/{user_name}"
+    SAVE_DIR = f"files/{user_name}"
 
     global temp_session
     temp_session = []
 
     bot.reply_to(message, f'Привет! Пришли 2 файла, которые хочешь сравнить')
+
+
 @bot.message_handler(content_types=['document'])
 def handle_file1(message):
     if sum(1 for x in Path(SAVE_DIR).iterdir()) % 2 == 0:
@@ -54,10 +54,12 @@ def handle_file1(message):
         percentage = ap.pics_gen(temp_session[0], temp_session[1])
 
         bot.send_media_group(message.chat.id,
-                             [telebot.types.InputMediaPhoto(open(photo, 'rb')) for photo in ['pic/pic1.jpg', 'pic/pic2.jpg']])
-        bot.send_message(message.chat.id, f"Файлы похожи на {round(percentage*100)} %")
+        [telebot.types.InputMediaPhoto(open(photo, 'rb')) for photo in ['pic/pic1.jpg', 'pic/pic2.jpg']])
+
+        bot.send_message(message.chat.id, f"Файлы похожи на {round(percentage * 100)}%")
 
         os.remove(os.path.join(SAVE_DIR, "file1"))
         os.remove(os.path.join(SAVE_DIR, "file2"))
+
 
 bot.polling()
