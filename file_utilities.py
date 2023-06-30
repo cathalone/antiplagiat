@@ -1,3 +1,6 @@
+import autopep8 as ap
+
+
 def read_files(filename1, filename2, split):
 	with open(filename1, encoding='utf-8') as f1, open(filename2, encoding='utf-8') as f2:
 		if split:
@@ -12,6 +15,5 @@ def read_files(filename1, filename2, split):
 
 
 def preprocess_code(text):
-	for i in range(len(text)):
-		text[i] = text[i].strip('\n')
+	text = ap.fix_code(text.lower())
 	return text
