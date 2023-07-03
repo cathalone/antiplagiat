@@ -35,43 +35,39 @@ def text_format(text):
     return tabs_removing(empty_lines_removing(text))
 
 
-def line_wrap(line, line_lenght):
-    """ разбивает строку на несколько строк по заданной длине строки (нужно только для визуализации) """
-    words = line.split(" ")
-    lines = [words[0]]
-    i = 1
-    n = 0
-    while i < len(words):
-        if n == 0:
-            while len(lines[n]) + 1 + len(words[i]) + 2 <= line_lenght:
-                lines[n] = lines[n] + " " + words[i]
-                if i + 1 == len(words):
-                    break
-                i += 1
-        else:
-            while len(lines[n]) + 1 + len(words[i]) + 5 <= line_lenght:
-                lines[n] = lines[n] + " " + words[i]
-                if i + 1 == len(words):
-                    break
-                i += 1
-        lines[n] = lines[n] + " ▶"
-        lines.append(words[i])
-        i += 1
-        n += 1
-    lines = lines[:-1]
-    lines[-1] = lines[-1].replace(" ▶", "")
-    for i in range(len(lines)):
-        if i != 0:
-            lines[i] = " ▶ " + lines[i]
-    result_text = lines[0]
-    for i in range(len(lines) - 1):
-        result_text = result_text + "\n" + lines[i + 1]
-    return result_text
+def line_wrap(text, line_length):
+    if len(text) > line_length:
+        words = text.split()
+        formatted_text = ''
+        current_line_length = 0
 
+        for word in words:
+            word_length = len(word)
 
+            if current_line_length + 1 + word_length + 5 <= line_length:
+                formatted_text += word + ' '
+                current_line_length += word_length + 1
+            else:
+                formatted_text += '\n' + word + ' '
+                current_line_length = word_length + 1
 
-l = open('application.py').read()
+        formatted_text = formatted_text.strip()
 
-txt = "ki eji fj ri ij rfi ej ki eji fj ri ij rfi ej ki eji fj ri ij rfi ej"
+        lines = formatted_text.split("\n")
+        for i in range(len(lines)):
+            if i == 0:
+                length = line_length - len(lines[i]) + 3
+                lines[i] = lines[i] + " " * length + "▶"
+            elif i == len(lines) - 1:
+                lines[i] = " ▶ " + lines[i]
+            else:
+                length = line_length - len(lines[i])
+                lines[i] = " ▶ " + lines[i] + " " * length + "▶"
 
-print(line_wrap(txt, 50))
+        result_text = lines[0]
+        for i in range(len(lines) - 1):
+            result_text = result_text + "\n" + lines[i + 1]
+
+        return result_text
+    else:
+        return text
