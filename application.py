@@ -7,30 +7,32 @@ def code_to_image(lines, line_number, percentage, n):
     img = Image.new('RGB', (1080, 720), 'black')
     img.save('pic/pic' + str(n) + '.jpg')
     img = Image.open('pic/pic' + str(n) + '.jpg')
+    n1 = 0
     for i in range(len(lines)):
         line = tf.tabs_removing_for_line(lines[i])
-        # line = tf.line_wrap(line, 30)
-        # print(line)
+        line = tf.line_wrap(line, 110)
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
         idraw = ImageDraw.Draw(img)
-        idraw.text((60, 35 + i * 22), line, font=font, fill=(0, 255, 0))
+        idraw.text((60, 35 + i * 22 + n1 * 18), line, font=font, fill=(0, 255, 0))
+
+        n1 += len(line.strip().split('\n')) - 1
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
         idraw = ImageDraw.Draw(img)
-        idraw.text((0, 18 + i * 22), "_"*150, font=font, fill=(0, 255, 0))
+        idraw.text((0, 18 + 22 + i * 22 + n1 * 18), "_"*150, font=font, fill=(0, 255, 0))
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
-        idraw.text((10, 38 + i * 22), "line " + str(line_number[i]+1), font=font, fill=(0, 255, 0))
+        idraw.text((10, 38 + i * 22 + n1 * 18), "line " + str(line_number[i]+1), font=font, fill=(0, 255, 0))
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
-        idraw.text((1050, 38 + i * 22), str(round(percentage[i]*100)) + " %", font=font, fill=(0, 255, 0))
+        idraw.text((1050, 38 + i * 22 + n1 * 18), str(round(percentage[i]*100)) + " %", font=font, fill=(0, 255, 0))
 
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
     idraw = ImageDraw.Draw(img)
-    idraw.text((0, 18 + 30 * 22), "_" * 150, font=font, fill=(0, 255, 0))
+    idraw.text((0, 18), "_" * 150, font=font, fill=(0, 255, 0))
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
     idraw = ImageDraw.Draw(img)
     idraw.text((5, 5), "FILE " + str(n), font=font, fill=(0, 255, 0))
