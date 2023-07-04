@@ -74,7 +74,7 @@ def mongo_collections(i: int, spisok):
                         {"Plagiats": plagi})
 
 
-def insert_plagiats(collections,file):
+def insert_plagiats(collections,file,author: str):
     with open(file,"r") as f:
         temp = f.read()
     all = []
@@ -82,7 +82,7 @@ def insert_plagiats(collections,file):
     for data in a:
         all.append(data)
     plag = []
-    insert_document(collections, create_dict_collections(names.get_full_name(), file[:-3], temp, plag))
+    insert_document(collections, create_dict_collections(author, file[:-3], temp, plag))
     id = find_document(collections,{"Article": file[:-3]})["_id"]
     for i in range(len(all)):
         if similarity(all[i]["link"], temp) >= 0.20:
@@ -93,16 +93,16 @@ def insert_plagiats(collections,file):
                            "Prosent": similarity(all[i]["link"], temp) * 100}]
     update_document(collections,{"Article": file[:-3]},{"Plagiats": plag})
 
-spisok = []
-for i in range(len(folder_contents)):
-    spisok.append([names.get_full_name(),folder_contents[i]])
+# spisok = []
+# for i in range(len(folder_contents)):
+#     spisok.append([names.get_full_name(),folder_contents[i]])
 
 
 # Загружаем все данные в базу MongoDB
-mongo_collections(len(spisok),spisok)
+# mongo_collections(len(spisok),spisok)
 
 # Загружаем новый файл в базу и проверяем его на плагиат
-insert_plagiats(series_collection1,"power.py")
+# insert_plagiats(series_collection1,"haar.py")
 
 
 
@@ -115,3 +115,6 @@ insert_plagiats(series_collection1,"power.py")
 
 # 649b42cfa628eb4be2f66046
 # print(find_document(series_collection1,{"_id": bson.objectid.ObjectId("649c3ffd4ad02e990712944d")}))
+# with open("C:/Users/Home/Desktop/1 курс/VP3LRMartynav/tournament.py","r") as f:
+#     temp = f.read()
+# print(temp)
