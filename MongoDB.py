@@ -1,10 +1,7 @@
 import pymongo
-import os
-import numpy as np
 import datetime
-import names
 import difflib
-import bson
+from cheker import compute_cosine_similarity
 
 def similarity(text1,text2):
     normalized1 = text1.lower()
@@ -13,10 +10,10 @@ def similarity(text1,text2):
     return matcher.ratio()
 
 # Укажите путь к папке, которую хотите открыть
-path = '/Users/Home/PycharmProjects/antiplagiat/articles'
+# path = '/Users/Home/PycharmProjects/antiplagiat/articles'
 
 # Открываем папку с помощью метода listdir()
-folder_contents = os.listdir(path)
+# folder_contents = os.listdir(path)
 
 # print(folder_contents)
 
@@ -67,9 +64,9 @@ def mongo_collections(i: int, spisok):
     for i in range(len(all)):
         plagi = []
         for j in range(len(all)):
-            if (similarity(all[i]["link"], all[j]["link"])) >= 0.3 and i != j:
+            if (compute_cosine_similarity(all[i]["link"], all[j]["link"])) >= 0.3 and i != j:
                 plagi += [{"Time": str(datetime.datetime.today())[:-7], "_id": all[j]["_id"],
-                           "Prosent": similarity(all[i]["link"], all[j]["link"]) * 100}]
+                           "Prosent": compute_cosine_similarity(all[i]["link"], all[j]["link"]) * 100}]
         update_document(series_collection1, {"_id": all[i]["_id"]},
                         {"Plagiats": plagi})
 
@@ -82,39 +79,27 @@ def insert_plagiats(collections,file,author: str):
     for data in a:
         all.append(data)
     plag = []
-    insert_document(collections, create_dict_collections(author, file[:-3], temp, plag))
-    id = find_document(collections,{"Article": file[:-3]})["_id"]
+    id = insert_document(collections, create_dict_collections(author, file[:-3], temp, plag))
+    # id = find_document(collections,{"Article": file[:-3],"Author": author})["_id"]
     for i in range(len(all)):
-        if similarity(all[i]["link"], temp) >= 0.20:
+        if compute_cosine_similarity(all[i]["link"], temp) >= 0.50:
             update_document(collections,{"_id": all[i]["_id"]},{"Plagiats": all[i]["Plagiats"] +
                             [{"Time": str(datetime.datetime.today())[:-7], "_id": id,
-                           "Prosent": similarity(all[i]["link"], temp) * 100}]})
+                           "Prosent": compute_cosine_similarity(all[i]["link"], temp) * 100}]})
             plag += [{"Time": str(datetime.datetime.today())[:-7], "_id": all[i]["_id"],
-                           "Prosent": similarity(all[i]["link"], temp) * 100}]
-    update_document(collections,{"Article": file[:-3]},{"Plagiats": plag})
+                           "Prosent": compute_cosine_similarity(all[i]["link"], temp) * 100}]
 
-# spisok = []
-# for i in range(len(folder_contents)):
-#     spisok.append([names.get_full_name(),folder_contents[i]])
+    print(plag)
+    update_document(collections,{"_id": id},{"Plagiats": plag})
+
+
 
 
 # Загружаем все данные в базу MongoDB
 # mongo_collections(len(spisok),spisok)
 
 # Загружаем новый файл в базу и проверяем его на плагиат
-# insert_plagiats(series_collection1,"haar.py")
+# insert_plagiats(series_collection1,"haar.py","rrrrrr")
 
 
 
-# print(plag)
-# with open("bullscows.py","r") as f:
-#     temp = f.read()
-# a = series_collection1.find()
-# for data in a:
-#     print(similarity(temp,data["link"]))
-
-# 649b42cfa628eb4be2f66046
-# print(find_document(series_collection1,{"_id": bson.objectid.ObjectId("649c3ffd4ad02e990712944d")}))
-# with open("C:/Users/Home/Desktop/1 курс/VP3LRMartynav/tournament.py","r") as f:
-#     temp = f.read()
-# print(temp)
