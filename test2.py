@@ -1,24 +1,24 @@
 class BankAccount:
     def __init__(self, account_number, holder_name, balance=0):
-        self.account_number = account_number
-        self.holder_name = holder_name
-        self.balance = balance
+        self._number = account_number
+        self._name = holder_name
+        self.bal = balance
 
-    def deposit(self, amount):
-        self.balance += amount
-        print(f"Deposited {amount} units. New balance: {self.balance} units.")
+    def deposit(self, am):
+        self.bal += am
+        print(f"Deposited {am} units. New balance: {self.bal} units.")
 
-    def func1(self, amount):
-        if self.balance >= amount:
-            self.balance -= amount
-            print(f"Withdrawn {amount} units. New balance: {self.balance} units.")
+    def func1(self, am):
+        if self.bal >= am:
+            self.bal -= am
+            print(f"Withdrawn {am} units. New balance: {self.bal} units.")
         else:
             print("Insufficient funds.")
 
     def func2(self):
-        print(f"Account Number: {self.account_number}")
-        print(f"Holder Name: {self.holder_name}")
-        print(f"Balance: {self.balance} units.")
+        print(f"Account Number: {self._number}")
+        print(f"Holder Name: {self._name}")
+        print(f"Balance: {self.bal} units.")
 
 
 # Пример использования класса BankAccount

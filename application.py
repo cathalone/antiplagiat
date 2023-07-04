@@ -16,8 +16,6 @@ def code_to_image(lines1, line_number1, percentage1, lines2, line_number2):
         idraw = ImageDraw.Draw(img)
         idraw.text((60, 35 + i * 22 + n1 * 18), line1, font=font, fill=(0, 255, 0))
 
-
-
         line = tf.tabs_removing_for_line(lines2[i])
         line = tf.line_wrap(line, 50)
 
@@ -29,15 +27,15 @@ def code_to_image(lines1, line_number1, percentage1, lines2, line_number2):
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
         idraw = ImageDraw.Draw(img)
-        idraw.text((0, 18 + 22 + i * 22 + n1 * 18), "_"*150, font=font, fill=(0, 255, 0))
+        idraw.text((0, 18 + 22 + i * 22 + n1 * 18), "_" * 150, font=font, fill=(0, 255, 0))
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
-        idraw.text((10, 38 + i * 22 + n1 * 18), "line " + str(line_number1[i]+1), font=font, fill=(0, 255, 0))
+        idraw.text((10, 38 + i * 22 + n1 * 18), "line " + str(line_number1[i] + 1), font=font, fill=(0, 255, 0))
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
-        idraw.text((1050, 38 + i * 22 + n1 * 18), str(round(percentage1[i]*100)) + " %", font=font, fill=(0, 255, 0))
+        idraw.text((1050, 38 + i * 22 + n1 * 18), str(round(percentage1[i] * 100)) + " %", font=font, fill=(0, 255, 0))
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
         idraw = ImageDraw.Draw(img)
@@ -60,7 +58,7 @@ def code_to_image(lines1, line_number1, percentage1, lines2, line_number2):
 
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
     idraw = ImageDraw.Draw(img)
-    idraw.text((515, 0), "|\n"*150, font=font, fill=(0, 255, 0))
+    idraw.text((515, 0), "|\n" * 150, font=font, fill=(0, 255, 0))
 
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
     idraw = ImageDraw.Draw(img)
@@ -83,7 +81,7 @@ def similar_strings(path1, path2, n):
         for j in range(txcp.length()[1]):
             if l1[i] != '' and l2[j] != '':
                 if 'import' in l1[i]:
-                    misses.append((i, l1[i], j, l2[j], txcp.line_by_line_similarity(i, j)-1))
+                    misses.append((i, l1[i], j, l2[j], txcp.line_by_line_similarity(i, j) - 1))
                 else:
                     misses.append((i, l1[i], j, l2[j], txcp.line_by_line_similarity(i, j)))
     misses.sort(key=lambda obj: obj[4])
@@ -109,4 +107,5 @@ def pics_gen(path1, path2):
     return sim
 
 
-print(pics_gen('test1.py', 'test2.py'))
+if __name__ == '__main__':
+    print(pics_gen('test1.py', 'test2.py'))
