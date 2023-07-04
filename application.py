@@ -23,7 +23,7 @@ def code_to_image(lines1, line_number1, percentage1, lines2, line_number2):
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
         idraw = ImageDraw.Draw(img)
-        idraw.text((505 + 60, 35 + i * 22 + n1 * 18), line, font=font, fill=(0, 255, 0))
+        idraw.text((520 + 60, 35 + i * 22 + n1 * 18), line, font=font, fill=(0, 255, 0))
 
         n1 += max(len(line.strip().split('\n')) - 1, len(line1.strip().split('\n')) - 1)
 
@@ -45,7 +45,7 @@ def code_to_image(lines1, line_number1, percentage1, lines2, line_number2):
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
-        idraw.text((505 + 10, 38 + i * 22 + n1 * 18), "line " + str(line_number2[i] + 1), font=font, fill=(0, 255, 0))
+        idraw.text((520 + 10, 38 + i * 22 + n1 * 18), "line " + str(line_number2[i] + 1), font=font, fill=(0, 255, 0))
 
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
     idraw = ImageDraw.Draw(img)
@@ -56,11 +56,11 @@ def code_to_image(lines1, line_number1, percentage1, lines2, line_number2):
 
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
     idraw = ImageDraw.Draw(img)
-    idraw.text((505 + 5, 5), "FILE 2", font=font, fill=(0, 255, 0))
+    idraw.text((520 + 5, 5), "FILE 2", font=font, fill=(0, 255, 0))
 
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
     idraw = ImageDraw.Draw(img)
-    idraw.text((500, 0), "|\n"*150, font=font, fill=(0, 255, 0))
+    idraw.text((515, 0), "|\n"*150, font=font, fill=(0, 255, 0))
 
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
     idraw = ImageDraw.Draw(img)
@@ -68,7 +68,7 @@ def code_to_image(lines1, line_number1, percentage1, lines2, line_number2):
 
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=30)
     idraw = ImageDraw.Draw(img)
-    idraw.text((1050, 0), "%", font=font, fill=(0, 255, 0))
+    idraw.text((1055, 0), "%", font=font, fill=(0, 255, 0))
 
     img.save('pic/pic1.jpg')
 
@@ -109,4 +109,4 @@ def pics_gen(path1, path2):
     return sim
 
 
-pics_gen('MongoDB.py', 'text_comparer.py')
+print(pics_gen('test1.py', 'test2.py'))
