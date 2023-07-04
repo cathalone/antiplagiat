@@ -23,7 +23,7 @@ def code_to_image(lines1, line_number1, percentage1, lines2, line_number2):
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
         idraw = ImageDraw.Draw(img)
-        idraw.text((540 + 60, 35 + i * 22 + n1 * 18), line, font=font, fill=(0, 255, 0))
+        idraw.text((505 + 60, 35 + i * 22 + n1 * 18), line, font=font, fill=(0, 255, 0))
 
         n1 += max(len(line.strip().split('\n')) - 1, len(line1.strip().split('\n')) - 1)
 
@@ -79,10 +79,13 @@ def similar_strings(path1, path2, n):
     l1 = lines[0]
     l2 = lines[1]
     misses = []
-    for i in range(txcp.lenght()[0]):
-        for j in range(txcp.lenght()[1]):
+    for i in range(txcp.length()[0]):
+        for j in range(txcp.length()[1]):
             if l1[i] != '' and l2[j] != '':
-                misses.append((i, l1[i], j, l2[j], txcp.line_by_line_similitarity(i, j)))
+                if 'import' in l1[i]:
+                    misses.append((i, l1[i], j, l2[j], txcp.line_by_line_similarity(i, j)-1))
+                else:
+                    misses.append((i, l1[i], j, l2[j], txcp.line_by_line_similarity(i, j)))
     misses.sort(key=lambda obj: obj[4])
     return misses[-1:-n - 1:-1]
 
