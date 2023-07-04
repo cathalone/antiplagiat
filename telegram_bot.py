@@ -12,12 +12,12 @@ bot = telebot.TeleBot(BOT_TOKEN)
 def start(message):
     user_name = message.from_user.username
 
-    if not os.path.exists(f"C:/Users/di272/PycharmProjects/antiplagiat/files/{user_name}"):
-        os.mkdir(f"C:/Users/di272/PycharmProjects/antiplagiat/files/{user_name}")
+    if not os.path.exists(f"files/{user_name}"):
+        os.mkdir(f"files/{user_name}")
 
 
     global SAVE_DIR
-    SAVE_DIR = f"C:/Users/di272/PycharmProjects/antiplagiat/files/{user_name}"
+    SAVE_DIR = f"files/{user_name}"
 
     global temp_session
     temp_session = []

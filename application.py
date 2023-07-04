@@ -3,39 +3,74 @@ import text_comparer as tc
 import text_formatter as tf
 
 
-def code_to_image(lines, line_number, percentage, n):
+def code_to_image(lines1, line_number1, percentage1, lines2, line_number2):
     img = Image.new('RGB', (1080, 720), 'black')
-    img.save('pic/pic' + str(n) + '.jpg')
-    img = Image.open('pic/pic' + str(n) + '.jpg')
-    for i in range(len(lines)):
-        line = tf.tabs_removing_for_line(lines[i])
-        # line = tf.line_wrap(line, 30)
-        # print(line)
+    img.save('pic/pic1.jpg')
+    img = Image.open('pic/pic1.jpg')
+    n1 = 0
+    for i in range(len(lines1)):
+        line1 = tf.tabs_removing_for_line(lines1[i])
+        line1 = tf.line_wrap(line1, 50)
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
         idraw = ImageDraw.Draw(img)
-        idraw.text((60, 35 + i * 22), line, font=font, fill=(0, 255, 0))
+        idraw.text((60, 35 + i * 22 + n1 * 18), line1, font=font, fill=(0, 255, 0))
+
+
+
+        line = tf.tabs_removing_for_line(lines2[i])
+        line = tf.line_wrap(line, 50)
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
         idraw = ImageDraw.Draw(img)
-        idraw.text((0, 18 + i * 22), "_"*150, font=font, fill=(0, 255, 0))
+        idraw.text((520 + 60, 35 + i * 22 + n1 * 18), line, font=font, fill=(0, 255, 0))
+
+        n1 += max(len(line.strip().split('\n')) - 1, len(line1.strip().split('\n')) - 1)
+
+        font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
+        idraw = ImageDraw.Draw(img)
+        idraw.text((0, 18 + 22 + i * 22 + n1 * 18), "_"*150, font=font, fill=(0, 255, 0))
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
-        idraw.text((10, 38 + i * 22), "line " + str(line_number[i]+1), font=font, fill=(0, 255, 0))
+        idraw.text((10, 38 + i * 22 + n1 * 18), "line " + str(line_number1[i]+1), font=font, fill=(0, 255, 0))
 
         font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
         idraw = ImageDraw.Draw(img)
-        idraw.text((1050, 38 + i * 22), str(round(percentage[i]*100)) + " %", font=font, fill=(0, 255, 0))
+        idraw.text((1050, 38 + i * 22 + n1 * 18), str(round(percentage1[i]*100)) + " %", font=font, fill=(0, 255, 0))
+
+        font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
+        idraw = ImageDraw.Draw(img)
+        idraw.text((0, 18 + 22 + i * 22 + n1 * 18), "_" * 150, font=font, fill=(0, 255, 0))
+
+        font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=9)
+        idraw = ImageDraw.Draw(img)
+        idraw.text((520 + 10, 38 + i * 22 + n1 * 18), "line " + str(line_number2[i] + 1), font=font, fill=(0, 255, 0))
 
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=14)
     idraw = ImageDraw.Draw(img)
-    idraw.text((0, 18 + 30 * 22), "_" * 150, font=font, fill=(0, 255, 0))
+    idraw.text((0, 18), "_" * 150, font=font, fill=(0, 255, 0))
     font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
     idraw = ImageDraw.Draw(img)
-    idraw.text((5, 5), "FILE " + str(n), font=font, fill=(0, 255, 0))
+    idraw.text((5, 5), "FILE 1", font=font, fill=(0, 255, 0))
 
-    img.save('pic/pic' + str(n) + '.jpg')
+    font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
+    idraw = ImageDraw.Draw(img)
+    idraw.text((520 + 5, 5), "FILE 2", font=font, fill=(0, 255, 0))
+
+    font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
+    idraw = ImageDraw.Draw(img)
+    idraw.text((515, 0), "|\n"*150, font=font, fill=(0, 255, 0))
+
+    font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=20)
+    idraw = ImageDraw.Draw(img)
+    idraw.text((1035, 0), "|\n" * 150, font=font, fill=(0, 255, 0))
+
+    font = ImageFont.truetype("fonts/Hack-Regular.ttf", size=30)
+    idraw = ImageDraw.Draw(img)
+    idraw.text((1055, 0), "%", font=font, fill=(0, 255, 0))
+
+    img.save('pic/pic1.jpg')
 
 
 def similar_strings(path1, path2, n):
@@ -44,10 +79,13 @@ def similar_strings(path1, path2, n):
     l1 = lines[0]
     l2 = lines[1]
     misses = []
-    for i in range(txcp.lenght()[0]):
-        for j in range(txcp.lenght()[1]):
+    for i in range(txcp.length()[0]):
+        for j in range(txcp.length()[1]):
             if l1[i] != '' and l2[j] != '':
-                misses.append((i, l1[i], j, l2[j], txcp.line_by_line_similitarity(i, j)))
+                if 'import' in l1[i]:
+                    misses.append((i, l1[i], j, l2[j], txcp.line_by_line_similarity(i, j)-1))
+                else:
+                    misses.append((i, l1[i], j, l2[j], txcp.line_by_line_similarity(i, j)))
     misses.sort(key=lambda obj: obj[4])
     return misses[-1:-n - 1:-1]
 
@@ -67,9 +105,8 @@ def pics_gen(path1, path2):
         percentage.append(line[4])
     txcp = tc.TextComparer(path1, path2)
     sim = txcp.similarity()
-    code_to_image(lines1, line_numbers1, percentage, 1)
-    code_to_image(lines2, line_numbers2, percentage, 2)
+    code_to_image(lines1, line_numbers1, percentage, lines2, line_numbers2)
     return sim
 
 
-pics_gen('MongoDB.py', 'text_comparer.py')
+print(pics_gen('test1.py', 'test2.py'))
