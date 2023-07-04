@@ -23,3 +23,4 @@ class TextComparer:
 
     def lines(self):
         return self.lines1, self.lines2
+
