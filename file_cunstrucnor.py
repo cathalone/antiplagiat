@@ -42,13 +42,3 @@ def rename(text):
 		# for k,v in dt_time.items():
 		# 	text[i] = text[i].replace(f" {k} ",v)
 	return text
-
-for i in rename(preprocess_code(read_files("new_haar.py","harmonic.py", True)[0])):
-	print(i)
-# print(rename(preprocess_code(read_files("new_haar.py","harmonic.py", True)[0])))
-# print(type(preprocess_code(read_files("haar.py","harmonic.py", True)[0])))
-# print("huy tablizahaar(n: int):".split()[1][:"huy tablizahaar(n: int):".split()[1].find("(")])
-# a = "def function2(matrix1, matrix2):"["def function2(matrix1: list, matrix2: list):".find('(') + 1: -2].split(",")
-# for i in range(len(a)):
-# 	if a[i].find(":") != -1: a[i] = a[i][:a[i].find(":")]
-# print(a)

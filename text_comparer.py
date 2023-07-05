@@ -16,11 +16,13 @@ class TextComparer:
         return cheker.compute_cosine_similarity(self.text1, self.text2)
 
     def line_by_line_similarity(self, ind1, ind2):
-        return cheker.compute_cosine_similarity(self.lines1[ind1], self.lines2[ind2])
+        try:
+            return cheker.compute_cosine_similarity(self.lines1[ind1], self.lines2[ind2])
+        except ValueError:
+            return difflib.SequenceMatcher(None, self.lines1[ind1], self.lines2[ind2]).ratio()
 
     def length(self):
         return len(self.lines1), len(self.lines2)
 
     def lines(self):
         return self.lines1, self.lines2
-

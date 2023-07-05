@@ -1,23 +1,9 @@
 import pymongo
 import datetime
-import difflib
 from cheker import compute_cosine_similarity
+import file_utilities
 
-def similarity(text1,text2):
-    normalized1 = text1.lower()
-    normalized2 = text2.lower()
-    matcher = difflib.SequenceMatcher(None, normalized1, normalized2)
-    return matcher.ratio()
 
-# Укажите путь к папке, которую хотите открыть
-# path = '/Users/Home/PycharmProjects/antiplagiat/articles'
-
-# Открываем папку с помощью метода listdir()
-# folder_contents = os.listdir(path)
-
-# print(folder_contents)
-
-# Создаём клиента в базе MongoDB
 client = pymongo.MongoClient('localhost', 27017)
 
 def insert_document(collection, data):
@@ -39,10 +25,8 @@ def delete_document(collection, query):
 def create_dict_collections(Name: str,name_of_article: str, Link, spisok):
     return {"Author": Name,"Article": name_of_article,"link": Link, "Plagiats": spisok}
 
-# Создаём Database в MongoDB
 db = client["Antiplagiat"]
 
-# Создаём коллекцию в Database list_Sound в MongoDB
 series_collection1 = db["plagiat"]
 
 def mongo_collections(i: int, spisok):
@@ -64,9 +48,9 @@ def mongo_collections(i: int, spisok):
     for i in range(len(all)):
         plagi = []
         for j in range(len(all)):
-            if (compute_cosine_similarity(all[i]["link"], all[j]["link"])) >= 0.3 and i != j:
+            if (compute_cosine_similarity(file_utilities.preprocess_code(all[i]["link"]), file_utilities.preprocess_code(all[j]["link"]))) >= 0.5 and i != j:
                 plagi += [{"Time": str(datetime.datetime.today())[:-7], "_id": all[j]["_id"],
-                           "Prosent": compute_cosine_similarity(all[i]["link"], all[j]["link"]) * 100}]
+                           "Prosent": compute_cosine_similarity(file_utilities.preprocess_code(all[i]["link"]), file_utilities.preprocess_code(all[j]["link"])) * 100}]
         update_document(series_collection1, {"_id": all[i]["_id"]},
                         {"Plagiats": plagi})
 
@@ -80,26 +64,16 @@ def insert_plagiats(collections,file,author: str):
         all.append(data)
     plag = []
     id = insert_document(collections, create_dict_collections(author, file[:-3], temp, plag))
-    # id = find_document(collections,{"Article": file[:-3],"Author": author})["_id"]
     for i in range(len(all)):
-        if compute_cosine_similarity(all[i]["link"], temp) >= 0.50:
+        if compute_cosine_similarity(file_utilities.preprocess_code(all[i]["link"]), file_utilities.preprocess_code(temp)) >= 0.50:
             update_document(collections,{"_id": all[i]["_id"]},{"Plagiats": all[i]["Plagiats"] +
                             [{"Time": str(datetime.datetime.today())[:-7], "_id": id,
-                           "Prosent": compute_cosine_similarity(all[i]["link"], temp) * 100}]})
+                           "Prosent": compute_cosine_similarity(file_utilities.preprocess_code(all[i]["link"]), file_utilities.preprocess_code(temp)) * 100}]})
             plag += [{"Time": str(datetime.datetime.today())[:-7], "_id": all[i]["_id"],
-                           "Prosent": compute_cosine_similarity(all[i]["link"], temp) * 100}]
+                           "Prosent": compute_cosine_similarity(file_utilities.preprocess_code(all[i]["link"]), file_utilities.preprocess_code(temp)) * 100}]
 
-    print(plag)
     update_document(collections,{"_id": id},{"Plagiats": plag})
 
-
-
-
-# Загружаем все данные в базу MongoDB
-# mongo_collections(len(spisok),spisok)
-
-# Загружаем новый файл в базу и проверяем его на плагиат
-# insert_plagiats(series_collection1,"haar.py","rrrrrr")
 
 
 
