@@ -41,7 +41,7 @@ def handle_file1(message):
         with open(save_path1, 'wb') as new_file:
             new_file.write(downloaded_file1)
 
-        # MD.insert_plagiats(MD.series_collection1, save_path1)
+        MD.insert_plagiats(MD.series_collection1, save_path1, message.from_user.username)
 
     elif sum(1 for x in Path(SAVE_DIR).iterdir()) % 2 == 1:
         file2 = message.document
@@ -56,12 +56,13 @@ def handle_file1(message):
         with open(save_path2, 'wb') as new_file:
             new_file.write(downloaded_file2)
 
-        # MD.insert_plagiats(MD.series_collection1, save_path2)
         percentage = ap.pics_gen(temp_session[0], temp_session[1])
 
-        bot.send_media_group(message.chat.id,
-                             [telebot.types.InputMediaPhoto(open(photo, 'rb')) for photo in ['pic/pic1.jpg', 'pic/pic2.jpg']])
+        photo = open('pic/pic1.jpg', 'rb')
+        bot.send_photo(message.chat.id, photo)
         bot.send_message(message.chat.id, f"Файлы похожи на {round(percentage*100)} %")
+
+        MD.insert_plagiats(MD.series_collection1, save_path2, message.from_user.username)
 
         os.remove(os.path.join(SAVE_DIR, file1_name))
         os.remove(os.path.join(SAVE_DIR, file2_name))
