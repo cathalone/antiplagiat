@@ -109,4 +109,3 @@ def pics_gen(path1, path2):
     return sim
 
 
-print(pics_gen('test1.py', 'test2.py'))
